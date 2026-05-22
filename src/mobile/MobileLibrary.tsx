@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Play, Clock, FileText, Settings, DownloadCloud, Users, Info, MessageCircle } from 'lucide-react';
+import { Play, Clock, FileText, Settings, DownloadCloud, Users, Info, MessageCircle, Heart } from 'lucide-react';
 import Button from '../components/ui/Button';
 import { GameState } from '../types';
 import { ArkLogo } from '../components/ui/ArkLogo';
@@ -17,6 +17,7 @@ interface MobileMenuProps {
   onLoadGame: () => void;
   onShowCharacterLibrary: () => void;
   onShowInfo: () => void;
+  onShowDonate?: () => void;
   hasSaves: boolean;
   isIntroing?: boolean;
   isInstallable?: boolean;
@@ -29,6 +30,7 @@ export const MobileMainMenu: React.FC<MobileMenuProps> = ({
   onLoadGame, 
   onShowCharacterLibrary,
   onShowInfo,
+  onShowDonate,
   hasSaves,
   isIntroing = false,
   isInstallable = false,
@@ -196,6 +198,21 @@ export const MobileMainMenu: React.FC<MobileMenuProps> = ({
           </div>
           <span className="text-[10px] font-bold uppercase tracking-wider">Discord</span>
         </motion.a>
+
+        {/* Ủng Hộ (Donate) */}
+        {onShowDonate && (
+          <motion.button 
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={onShowDonate}
+            className="col-span-2 flex flex-row items-center justify-center gap-3 p-3.5 rounded-2xl bg-gradient-to-r from-rose-950/40 to-amber-950/40 border border-rose-500/40 hover:border-rose-400 text-rose-400 active:scale-95 transition-all"
+          >
+            <div className="p-1.5 bg-rose-500/20 text-rose-400 rounded-full animate-pulse">
+              <Heart size={16} fill="currentColor" />
+            </div>
+            <span className="text-xs font-bold uppercase tracking-widest text-slate-200">Ủng Hộ / Donate</span>
+          </motion.button>
+        )}
       </div>
     </div>
   );
