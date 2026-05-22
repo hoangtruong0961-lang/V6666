@@ -116,7 +116,8 @@ export const DEFAULT_SETTINGS: AppSettings = {
     storyDialogueColor: '#F97316',
     storyThinkingColor: '#A855F7',
     storyHighlightColor: '#FACC15',
-    storyOnomatopoeiaColor: '#EF4444'
+    storyOnomatopoeiaColor: '#EF4444',
+    interfaceMode: 'pc'
 };
 
 class DatabaseService {
@@ -205,9 +206,15 @@ class DatabaseService {
       if (!settings._uiMigrated3) {
         mergedSettings.contentBeautify = false;
         mergedSettings.fontSize = targetFontSize;
+        mergedSettings.interfaceMode = isMobileDevice ? 'mobile' : 'pc';
         mergedSettings._uiMigrated3 = true;
         setTimeout(() => this.saveSettings(mergedSettings), 0);
       }
+    }
+
+    if (settings && mergedSettings.interfaceMode === undefined) {
+      mergedSettings.interfaceMode = isMobileDevice ? 'mobile' : 'pc';
+      setTimeout(() => this.saveSettings(mergedSettings), 0);
     }
 
     // MIGRATION: Move old proxy settings to the new proxies array if empty

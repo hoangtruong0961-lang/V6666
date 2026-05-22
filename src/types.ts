@@ -126,6 +126,7 @@ export interface AppSettings {
   storyThinkingColor?: string;
   storyHighlightColor?: string;
   storyOnomatopoeiaColor?: string;
+  interfaceMode?: "pc" | "mobile";
 }
 
 export interface SystemLog {

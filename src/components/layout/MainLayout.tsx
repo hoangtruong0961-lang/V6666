@@ -10,19 +10,26 @@ interface MainLayoutProps {
 }
 
 const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
-  const { visualEffects } = useTheme();
+  const { visualEffects, interfaceMode } = useTheme();
   const { isMobile } = useResponsive();
+
+  const is70Zoom = interfaceMode === 'mobile';
 
   return (
     <MotionConfig reducedMotion={visualEffects ? 'never' : 'always'}>
       {/* 
         Sử dụng h-[100dvh] để tránh lỗi thanh địa chỉ trên trình duyệt di động.
         Áp dụng safe-area-padding từ MOBILE_CONFIG.
+        Hỗ trợ thu phóng giao diện 70% bằng CSS Transform kết hợp điều chỉnh chiều dài/rộng.
       */}
       <div 
-        className="relative w-full h-[100dvh] bg-stone-300 dark:bg-mystic-950 text-stone-900 dark:text-slate-200 overflow-hidden selection:bg-mystic-accent selection:text-mystic-900 font-sans transition-colors duration-300"
+        className="relative bg-stone-300 dark:bg-mystic-950 text-stone-900 dark:text-slate-200 overflow-hidden selection:bg-mystic-accent selection:text-mystic-900 font-sans transition-colors duration-300"
         style={{ 
-          paddingBottom: isMobile ? MOBILE_CONFIG.safeAreaPadding : 0
+          paddingBottom: isMobile ? MOBILE_CONFIG.safeAreaPadding : 0,
+          width: is70Zoom ? '142.857142857%' : '100%',
+          height: is70Zoom ? '142.857142857dvh' : '100dvh',
+          transform: is70Zoom ? 'scale(0.7)' : 'none',
+          transformOrigin: 'top left',
         }}
       >
         

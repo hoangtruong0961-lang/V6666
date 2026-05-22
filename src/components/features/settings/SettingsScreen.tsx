@@ -18,7 +18,7 @@ const SettingsScreen: React.FC<SettingsScreenProps> = ({ onNavigate, fromGame })
   const [settings, setSettings] = useState<AppSettings | null>(null);
   const [isSaving, setIsSaving] = useState(false);
   const [activeTab, setActiveTab] = useState<'general' | 'display' | 'game' | 'advanced' | 'api'>('general');
-  const { setTheme, setFontFamily, setFontSize, setVisualEffects } = useTheme();
+  const { setTheme, setFontFamily, setFontSize, setVisualEffects, setInterfaceMode } = useTheme();
   const [localFontSize, setLocalFontSize] = useState<string>('');
   const [manualKeyText, setManualKeyText] = useState('');
 
@@ -63,6 +63,7 @@ const SettingsScreen: React.FC<SettingsScreenProps> = ({ onNavigate, fromGame })
           setLocalFontSize(value.toString());
         }
         if (key === 'visualEffects') setVisualEffects(value as boolean);
+        if (key === 'interfaceMode') setInterfaceMode(value as 'pc' | 'mobile');
       }, 0);
       
       return newSettings;
@@ -85,6 +86,7 @@ const SettingsScreen: React.FC<SettingsScreenProps> = ({ onNavigate, fromGame })
             setLocalFontSize(value.toString());
           }
           if (key === 'visualEffects') setVisualEffects(value as boolean);
+          if (key === 'interfaceMode') setInterfaceMode(value as 'pc' | 'mobile');
         });
       }, 0);
       
@@ -815,7 +817,7 @@ const SettingsScreen: React.FC<SettingsScreenProps> = ({ onNavigate, fromGame })
                       <p className="text-sm text-slate-400">Điều chỉnh trải nghiệm nhìn phù hợp với cá nhân.</p>
                     </div>
 
-                    <div className="bg-slate-800/40 border border-slate-700/50 rounded-2xl p-6 grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div className="bg-slate-800/40 border border-slate-700/50 rounded-2xl p-6 grid grid-cols-1 md:grid-cols-3 gap-8">
                       <div className="space-y-3">
                         <label className="text-sm font-bold text-slate-300">Phông chữ hệ thống</label>
                         <select 
@@ -852,6 +854,18 @@ const SettingsScreen: React.FC<SettingsScreenProps> = ({ onNavigate, fromGame })
                             className="w-full bg-slate-900/80 border border-slate-700 rounded-xl p-3 text-sm text-slate-200 focus:border-mystic-accent outline-none"
                             min="1" max="40"
                         />
+                      </div>
+
+                      <div className="space-y-3">
+                        <label className="text-sm font-bold text-slate-300">Chế độ giao diện</label>
+                        <select 
+                            value={settings.interfaceMode || 'pc'}
+                            onChange={(e) => handleChange('interfaceMode', e.target.value as 'pc' | 'mobile')}
+                            className="w-full bg-slate-900/80 border border-slate-700 rounded-xl p-3 text-sm text-slate-200 focus:border-mystic-accent outline-none"
+                        >
+                            <option value="pc">PC (Thu phóng 100%)</option>
+                            <option value="mobile">Mobile (Thu phóng 70%)</option>
+                        </select>
                       </div>
                     </div>
 

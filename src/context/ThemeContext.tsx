@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { dbService } from '../services/db/indexedDB';
 
@@ -14,6 +13,8 @@ interface ThemeContextType {
   setFontSize: (size: number) => void;
   visualEffects: boolean;
   setVisualEffects: (enabled: boolean) => void;
+  interfaceMode: 'pc' | 'mobile';
+  setInterfaceMode: (mode: 'pc' | 'mobile') => void;
 }
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
@@ -23,6 +24,7 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const [fontFamily, setFontFamilyState] = useState<string>('Inter');
   const [fontSize, setFontSizeState] = useState<number>(16);
   const [visualEffects, setVisualEffectsState] = useState<boolean>(true);
+  const [interfaceMode, setInterfaceModeState] = useState<'pc' | 'mobile'>('pc');
 
   useEffect(() => {
     const loadSettings = async () => {
@@ -31,6 +33,7 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       setFontFamilyState(settings.systemFont || 'Inter');
       setFontSizeState(settings.fontSize || 16);
       setVisualEffectsState(settings.visualEffects !== undefined ? settings.visualEffects : true);
+      setInterfaceModeState(settings.interfaceMode || 'pc');
     };
     loadSettings();
   }, []);
@@ -46,6 +49,11 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     root.style.setProperty('--font-system', fontFamily);
     root.style.setProperty('--font-size-base', `${fontSize}px`);
   }, [fontFamily, fontSize]);
+
+  useEffect(() => {
+    // Co giãn giao diện 70% được xử lý hoàn hảo trong MainLayout.tsx bằng standard CSS Transform.
+    // Việc này đảm bảo tính tương thích và mượt mà trên mọi trình duyệt (Safari, Firefox, Chrome).
+  }, [interfaceMode]);
 
   const toggleTheme = () => {
     const newTheme = theme === 'light' ? 'dark' : 'light';
@@ -68,12 +76,17 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     setVisualEffectsState(enabled);
   };
 
+  const setInterfaceMode = (mode: 'pc' | 'mobile') => {
+    setInterfaceModeState(mode);
+  };
+
   return (
     <ThemeContext.Provider value={{ 
       theme, toggleTheme, setTheme, 
       fontFamily, setFontFamily, 
       fontSize, setFontSize,
-      visualEffects, setVisualEffects
+      visualEffects, setVisualEffects,
+      interfaceMode, setInterfaceMode
     }}>
       {children}
     </ThemeContext.Provider>
